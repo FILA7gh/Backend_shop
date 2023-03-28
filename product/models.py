@@ -1,6 +1,13 @@
 from django.db import models
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
@@ -21,18 +28,22 @@ class Product(models.Model):
     description = models.TextField()
     price = models.FloatField(default=0.0)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    tags = models.ManyToManyField(Tag)
 
     @property
     def category_name(self):
         try:
             return self.category.name
-        except:
+        except Category.DoesNotExist:
             return ''
 
     @property
     def rating(self):
         all_stars = [review.stars for review in self.reviews.all()]
         return round(sum(all_stars) / len(all_stars), 2) if len(all_stars) > 0 else 0
+
+    def reviews(self):
+        return [review.text for review in self.reviews()]
 
     def __str__(self):
         return self.title
@@ -42,7 +53,7 @@ class Review(models.Model):
     CHOICES = ((i, '*' * i) for i in range(1, 6))
     text = models.TextField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
-    stars = models.IntegerField(choices=CHOICES, default=1)
+    stars = models.IntegerField(choices=CHOICES)
 
     def __str__(self):
         return self.text
