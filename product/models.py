@@ -31,6 +31,14 @@ class Product(models.Model):
     tags = models.ManyToManyField(Tag)
 
     @property
+    def reviews_list(self):
+        return [review.text for review in self.reviews.all()]
+
+    @property
+    def tags_list(self):
+        return [tag.name for tag in self.tags.all()]
+
+    @property
     def category_name(self):
         try:
             return self.category.name
@@ -42,8 +50,8 @@ class Product(models.Model):
         all_stars = [review.stars for review in self.reviews.all()]
         return round(sum(all_stars) / len(all_stars), 2) if len(all_stars) > 0 else 0
 
-    def reviews(self):
-        return [review.text for review in self.reviews()]
+    # def reviews(self):
+    #     return [review.text for review in self.reviews()]
 
     def __str__(self):
         return self.title

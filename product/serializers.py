@@ -3,10 +3,10 @@ from .models import Category, Product, Review, Tag
 from rest_framework.exceptions import ValidationError
 
 
-class TagsNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = ['name']
+# class TagsNameSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Tag
+#         fields = ['name']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -15,18 +15,18 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = 'id stars text product_title'.split()
 
 
-class ReviewTextSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = ['text']
+# class ReviewTextSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Review
+#         fields = ['text']
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    tags = TagsNameSerializer(many=True)
+    # tags = TagsNameSerializer(many=True)
 
     class Meta:
         model = Product
-        fields = 'id title description price category_name rating tags'.split()
+        fields = 'id title description price category_name rating tags_list'.split()
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -36,11 +36,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class RatingSerializer(serializers.ModelSerializer):
-    reviews = ReviewTextSerializer(many=True)
+    # reviews = ReviewTextSerializer(many=True)
 
     class Meta:
         model = Product
-        fields = 'title rating reviews'.split()
+        fields = 'title rating reviews_list'.split()
 
 
 class ProductValidateSerializer(serializers.Serializer):
@@ -58,9 +58,14 @@ class ProductValidateSerializer(serializers.Serializer):
         return category_id
 
     def validate_tags(self, tags):
-        if len(tags) == Tag.objects.filter(id__in=tags).count():
+        all_tags = Tag.objects.filter(id__in=tags)  # Все теги которые есть
+        all_objects = Tag.objects.all()  # Все обьекты в тегах
+        ids = [id_['id'] for id_ in all_objects.values()]  # все айдишки тегов
+
+        if len(tags) == all_tags.count():  # проверка на совпадение тегов
             return tags
-        raise ValidationError(f'tags ({tags}) not found!')
+
+        raise ValidationError(f'tags {[i for i in tags if i not in ids]} not found!')  # вывод айди тегов которых нет
 
 
 class CategoryValidateSerializer(serializers.Serializer):
