@@ -65,7 +65,8 @@ class ProductValidateSerializer(serializers.Serializer):
         if len(tags) == all_tags.count():  # проверка на совпадение тегов
             return tags
 
-        raise ValidationError(f'tags {[i for i in tags if i not in ids]} not found!')  # вывод айди тегов которых нет
+        # вывод индекса тегов которых нет
+        raise ValidationError(f'tags {[tags.index(i) for i in tags if i not in ids]} not found!')
 
 
 class CategoryValidateSerializer(serializers.Serializer):
