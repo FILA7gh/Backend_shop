@@ -6,15 +6,15 @@ from product import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('api/v1/categories/', views.category_list_api_view),
-    path('api/v1/categories/<int:id_>/', views.category_api_view),
+    path('api/v1/categories/', views.CategoryAPIView.as_view()),
+    path('api/v1/categories/<int:id_>/', views.CategoryDetailAPIView.as_view()),
 
-    path('api/v1/products/', views.product_list_api_view),
-    path('api/v1/products/<int:id_>/', views.product_api_view),
-    path('api/v1/products/reviews/', views.products_reviews_rating_view),
+    path('api/v1/products/', views.ProductAPIView.as_view()),
+    path('api/v1/products/<int:id_>/', views.ProductDetailAPIView.as_view()),
+    path('api/v1/products/reviews/', views.ProductReviewRatingAPIView.as_view()),
 
-    path('api/v1/reviews/', views.review_list_api_view),
-    path('api/v1/reviews/<int:id_>/', views.review_api_view),
+    path('api/v1/reviews/', views.ReviewAPIView.as_view()),
+    path('api/v1/reviews/<int:id_>/', views.ReviewDetailAPIView.as_view()),
 
     path('api/v1/users/', include('users.urls'))
 ]

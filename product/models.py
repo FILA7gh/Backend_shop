@@ -27,7 +27,7 @@ class Product(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     price = models.FloatField(default=0.0)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
 
     @property
@@ -50,8 +50,7 @@ class Product(models.Model):
         all_stars = [review.stars for review in self.reviews.all()]
         return round(sum(all_stars) / len(all_stars), 2) if len(all_stars) > 0 else 0
 
-    # def reviews(self):
-    #     return [review.text for review in self.reviews()]
+
 
     def __str__(self):
         return self.title

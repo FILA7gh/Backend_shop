@@ -1,7 +1,6 @@
 from rest_framework import serializers
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from rest_framework.exceptions import ValidationError
-from .models import NewUser
 
 
 class UserValidationSerializer(serializers.Serializer):
@@ -13,8 +12,8 @@ class UserCreateValidateSerializer(UserValidationSerializer):
 
     def validate_username(self, username):
         try:
-            NewUser.objects.get(username=username)
-        except NewUser.DoesNotExist:
+            User.objects.get(username=username)
+        except User.DoesNotExist:
             return username
         raise ValidationError('User already exists!')
 
@@ -30,5 +29,5 @@ class UserLoginValidateSerializer(UserValidationSerializer):
 
 class UserConfirmSerializer(serializers.Serializer):
     class Meta:
-        model = NewUser
+        model = User
         fields = ['id', 'code']

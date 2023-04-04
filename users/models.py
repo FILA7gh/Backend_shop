@@ -2,10 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# class ConfirmationCode(models.Model):
-#     code = models.CharField(max_length=6)
-
-
-class NewUser(User):
+class ConfirmationCode(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     code = models.CharField(max_length=6)
+
+    def __str__(self):
+        return self.code
+
+# class NewUser(User):
+#     code = models.CharField(max_length=6)
     # code = models.OneToOneField(ConfirmationCode, on_delete=models.CASCADE)
