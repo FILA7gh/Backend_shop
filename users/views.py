@@ -13,9 +13,17 @@ class RegistrationAPIView(APIView):
     def post(self, request):
         serializer = UserCreateValidateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        # генерируем 6 значный код
+        code = ''
+        for i in range(6):
+            code += str(random.randint(0, 9))
+
+        # создаем пользователя и делаем неактивным
         user = User.objects.create_user(**serializer.validated_data, is_active=False)
+        code = ConfirmationCode.objects.create(user_id=user.id, code=code)  # привязываем код к пользователю
         return Response(status=status.HTTP_201_CREATED,
-                        data={'user_id': user.id})
+                        data={'user_id': user.id, 'code': code.code})
 
 
 class ConfirmAPIView(APIView):
@@ -23,14 +31,9 @@ class ConfirmAPIView(APIView):
         serializer = UserConfirmSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        code = ''
-        for i in range(6):
-            code += str(random.randint(0, 9))
-
-        code = ConfirmationCode.objects.create(**serializer.validated_data, code=code)
-
-        if User.objects.filter(user_ptr_id=request.data['user_id'], code=request.data['code']):
-            User.objects.update(is_active=True)
+        # проверка на совпадение кода и айди пользователя
+        if ConfirmationCode.objects.filter(user_id=request.data['user_id'], code=request.data['code']):
+            User.objects.update(is_active=True)  # делаем пользователя активным
             return Response(status=status.HTTP_202_ACCEPTED,
                             data={'code': 'confirmed'})
 

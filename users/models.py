@@ -9,6 +9,3 @@ class ConfirmationCode(models.Model):
     def __str__(self):
         return self.code
 
-# class NewUser(User):
-#     code = models.CharField(max_length=6)
-    # code = models.OneToOneField(ConfirmationCode, on_delete=models.CASCADE)
