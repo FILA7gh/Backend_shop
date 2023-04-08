@@ -50,8 +50,6 @@ class Product(models.Model):
         all_stars = [review.stars for review in self.reviews.all()]
         return round(sum(all_stars) / len(all_stars), 2) if len(all_stars) > 0 else 0
 
-
-
     def __str__(self):
         return self.title
 
