@@ -3,27 +3,13 @@ from .models import Category, Product, Review, Tag
 from rest_framework.exceptions import ValidationError
 
 
-# class TagsNameSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Tag
-#         fields = ['name']
-
-
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = 'id stars text product_title'.split()
 
 
-# class ReviewTextSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Review
-#         fields = ['text']
-
-
 class ProductSerializer(serializers.ModelSerializer):
-    # tags = TagsNameSerializer(many=True)
-
     class Meta:
         model = Product
         fields = 'id title description price category_name rating tags_list'.split()
@@ -36,8 +22,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class RatingSerializer(serializers.ModelSerializer):
-    # reviews = ReviewTextSerializer(many=True)
-
     class Meta:
         model = Product
         fields = 'title rating reviews_list'.split()

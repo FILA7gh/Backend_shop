@@ -45,7 +45,7 @@ class ProductAPIView(ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     pagination_class = PageNumberPagination
-    validate_serializer_class = ProductValidateSerializer
+    # validate_serializer_class = ProductValidateSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = ProductValidateSerializer(data=request.data)
